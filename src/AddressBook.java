@@ -1,9 +1,8 @@
-import com.sun.jndi.cosnaming.IiopUrl;
-
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class AddressBook extends JFrame {
@@ -22,11 +21,17 @@ public class AddressBook extends JFrame {
 
     private void initContacts() {
         this.contacts = new Properties();
-        this.contacts.setProperty("toto", "0506080970");
-        this.contacts.setProperty("tata", "8596741258");
+
+        try(InputStream in = new FileInputStream("./addressbook.ab")) {
+            contacts.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initFrame() {
+        initMenu();
+
         repertoire = new ContactModel(this.contacts);
         JList<String> liste = new JList<>(repertoire);
 
@@ -42,6 +47,28 @@ public class AddressBook extends JFrame {
 
         visualisationInfos = new JTextPane();
         this.add(visualisationInfos, BorderLayout.CENTER);
+
+        visualisationInfos.addCaretListener(caretEvent ->
+            updateContact(liste.getSelectedValue(), visualisationInfos.getText())
+        );
+    }
+
+    private void initMenu() {
+        JMenuBar menu = new JMenuBar();
+
+        JMenu file = new JMenu("Ficher");
+        menu.add(file);
+
+        JMenu contacts = new JMenu("Contacts");
+        JMenuItem new_contact = new JMenuItem("Nouveau contact");
+        menu.add(contacts);
+        contacts.add(new_contact);
+
+        setJMenuBar(menu);
+    }
+
+    private void updateContact(String selectedValue, String text) {
+        this.contacts.setProperty(selectedValue, text);
     }
 
     private void choixContact(String selectedContact) {
