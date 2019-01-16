@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +41,10 @@ public class AddressBook extends JFrame {
                 choixContact(liste.getSelectedValue());
             }
         });
+
+        KeyStroke ctrlA = KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+        InputMap listeInputMap = liste.getInputMap();
+        listeInputMap.put(ctrlA, "none");
 
         JScrollPane scroll = new JScrollPane();
         scroll.setViewportView(liste);
