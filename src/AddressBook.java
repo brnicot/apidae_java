@@ -61,6 +61,8 @@ public class AddressBook extends JFrame {
 
         JMenu contacts = new JMenu("Contacts");
         JMenuItem new_contact = new JMenuItem("Nouveau contact");
+        new_contact.setAction(new NewContactAction());
+
         menu.add(contacts);
         contacts.add(new_contact);
 
