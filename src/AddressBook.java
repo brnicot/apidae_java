@@ -22,7 +22,7 @@ public class AddressBook extends JFrame {
     private void initContacts() {
         this.contacts = new Properties();
 
-        try(InputStream in = new FileInputStream("./addressbook.ab")) {
+        try (InputStream in = new FileInputStream("./addressbook.ab")) {
             contacts.load(in);
         } catch (IOException e) {
             e.printStackTrace();
@@ -36,7 +36,7 @@ public class AddressBook extends JFrame {
         JList<String> liste = new JList<>(repertoire);
 
         liste.addListSelectionListener(listSelectionEvent -> {
-            if(!listSelectionEvent.getValueIsAdjusting()) {
+            if (!listSelectionEvent.getValueIsAdjusting()) {
                 choixContact(liste.getSelectedValue());
             }
         });
@@ -49,7 +49,7 @@ public class AddressBook extends JFrame {
         this.add(visualisationInfos, BorderLayout.CENTER);
 
         visualisationInfos.addCaretListener(caretEvent ->
-            updateContact(liste.getSelectedValue(), visualisationInfos.getText())
+                updateContact(liste.getSelectedValue(), visualisationInfos.getText())
         );
     }
 
@@ -61,7 +61,7 @@ public class AddressBook extends JFrame {
 
         JMenu contacts = new JMenu("Contacts");
         JMenuItem new_contact = new JMenuItem("Nouveau contact");
-        new_contact.setAction(new NewContactAction());
+        new_contact.setAction(new NewContactAction(this));
 
         menu.add(contacts);
         contacts.add(new_contact);
@@ -88,4 +88,8 @@ public class AddressBook extends JFrame {
         this.setVisible(true);
     }
 
+    void addContact(String nom, String infos) {
+        updateContact(nom, infos);
+        repertoire.addElement(nom);
+    }
 }
