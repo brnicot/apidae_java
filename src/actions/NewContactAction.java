@@ -1,3 +1,7 @@
+package actions;
+
+import base.AddressBook;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,11 +11,11 @@ public class NewContactAction extends AbstractAction {
 
     private AddressBook ab;
 
-    NewContactAction(AddressBook ab) {
+    public NewContactAction(AddressBook ab) {
         this.ab = ab;
-        putValue(Action.NAME, "Ajouter un contact");
-        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
-        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        putValue(Action.NAME, "Créer un contact");
+        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
     }
 
     @Override

@@ -1,6 +1,10 @@
+package base;
+
+import actions.NewContactAction;
+import actions.SaveAction;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,8 +12,8 @@ import java.util.Properties;
 
 public class AddressBook extends JFrame {
 
-    protected Properties contacts;
-    private ContactModel repertoire;
+    private Properties contacts;
+    private ContactModel listeNomsContacts;
     private JTextPane visualisationInfos;
 
     public static void main(String[] args) {
@@ -33,28 +37,24 @@ public class AddressBook extends JFrame {
     private void initFrame() {
         initMenu();
 
-        repertoire = new ContactModel(this.contacts);
-        JList<String> liste = new JList<>(repertoire);
+        listeNomsContacts = new ContactModel(this.contacts);
+        JList<String> listeContacts = new JList<>(listeNomsContacts);
 
-        liste.addListSelectionListener(listSelectionEvent -> {
+        listeContacts.addListSelectionListener(listSelectionEvent -> {
             if (!listSelectionEvent.getValueIsAdjusting()) {
-                choixContact(liste.getSelectedValue());
+                choixContact(listeContacts.getSelectedValue());
             }
         });
 
-        KeyStroke ctrlA = KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
-        InputMap listeInputMap = liste.getInputMap();
-        listeInputMap.put(ctrlA, "none");
-
         JScrollPane scroll = new JScrollPane();
-        scroll.setViewportView(liste);
+        scroll.setViewportView(listeContacts);
         this.add(scroll, BorderLayout.NORTH);
 
         visualisationInfos = new JTextPane();
         this.add(visualisationInfos, BorderLayout.CENTER);
 
         visualisationInfos.addCaretListener(caretEvent ->
-                updateContact(liste.getSelectedValue(), visualisationInfos.getText())
+                setContact(listeContacts.getSelectedValue(), visualisationInfos.getText())
         );
     }
 
@@ -77,7 +77,7 @@ public class AddressBook extends JFrame {
         setJMenuBar(menu);
     }
 
-    private void updateContact(String selectedValue, String text) {
+    private void setContact(String selectedValue, String text) {
         this.contacts.setProperty(selectedValue, text);
     }
 
@@ -90,14 +90,18 @@ public class AddressBook extends JFrame {
     }
 
     private void initWindow() {
-        this.setTitle("Mon répertoire téléphonique");
+        this.setTitle("AddressBook v0.0.1 - Bryan NICOT");
         this.setSize(450, 300);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
-    void addContact(String nom, String infos) {
-        updateContact(nom, infos);
-        repertoire.addElement(nom);
+    public void addContact(String nom, String infos) {
+        setContact(nom, infos);
+        listeNomsContacts.addElement(nom);
+    }
+
+    public Properties getContacts() {
+        return contacts;
     }
 }
