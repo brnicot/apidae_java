@@ -62,14 +62,17 @@ public class AddressBook extends JFrame {
         JMenuBar menu = new JMenuBar();
 
         JMenu file = new JMenu("Ficher");
-        menu.add(file);
+        JMenuItem save = new JMenuItem();
+        save.setAction(new SaveAction(this));
+        file.add(save);
 
         JMenu contacts = new JMenu("Contacts");
-        JMenuItem new_contact = new JMenuItem("Nouveau contact");
+        JMenuItem new_contact = new JMenuItem();
         new_contact.setAction(new NewContactAction(this));
-
-        menu.add(contacts);
         contacts.add(new_contact);
+
+        menu.add(file);
+        menu.add(contacts);
 
         setJMenuBar(menu);
     }
