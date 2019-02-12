@@ -1,6 +1,8 @@
 package base;
 
+import actions.AboutAction;
 import actions.NewContactAction;
+import actions.QuitAction;
 import actions.SaveAction;
 
 import javax.swing.*;
@@ -58,13 +60,26 @@ public class AddressBook extends JFrame {
         );
     }
 
+    private void initWindow() {
+        this.setTitle("AddressBook");
+        this.setSize(450, 300);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setVisible(true);
+    }
+
     private void initMenu() {
         JMenuBar menu = new JMenuBar();
 
         JMenu file = new JMenu("Ficher");
-        JMenuItem save = new JMenuItem();
+        JMenuItem save, about, quit;
+        save = new JMenuItem();
         save.setAction(new SaveAction(this));
+        about = new JMenuItem();
+        about.setAction(new AboutAction());
+        quit = new JMenuItem();
+        quit.setAction(new QuitAction());
         file.add(save);
+        file.add(about);
 
         JMenu contacts = new JMenu("Contacts");
         JMenuItem new_contact = new JMenuItem();
@@ -89,12 +104,7 @@ public class AddressBook extends JFrame {
         this.visualisationInfos.setText(s);
     }
 
-    private void initWindow() {
-        this.setTitle("AddressBook v0.0.1 - Bryan NICOT");
-        this.setSize(450, 300);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setVisible(true);
-    }
+
 
     public void addContact(String nom, String infos) {
         setContact(nom, infos);
@@ -104,4 +114,23 @@ public class AddressBook extends JFrame {
     public Properties getContacts() {
         return contacts;
     }
+
+    /*
+    TODO :
+        Partie TP
+            - ex11 : quand on quitte, si modifs, alors demander si on veut sauvegarder
+                listen de l'event du bouton & de l'action !!
+            - ex12/13 : toolbar avec les mêmes actions que dans la menubar
+            - ex14 : trier la liste des entrées du répertoire par ordre alphabétique (cf collections)
+            - ex15 : menu popup comme dans la démo (??)
+        Partie "en plus"
+            - choix de l'emplacement du fichier de l'adressbook
+            - internationalisation
+        A penser pour rendu :
+            - doc_private & doc_public
+            - REAMDE qui décrit les cours utilisés & infos qu'on juge nécessaire
+            - sources (rajouter le dossier src dans le jar NICOT_AddressBook.jar)
+            - code propre (surtout gestion des events & exceptions !)
+            - tester le jar puis envoyer [PROJET LP] NICOT - AddressBook à fmichel@lirmm.fr
+     */
 }

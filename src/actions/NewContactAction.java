@@ -14,8 +14,8 @@ public class NewContactAction extends AbstractAction {
     public NewContactAction(AddressBook ab) {
         this.ab = ab;
         putValue(Action.NAME, "Créer un contact");
-        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
-        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
     }
 
     @Override
