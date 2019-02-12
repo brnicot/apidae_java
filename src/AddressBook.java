@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class AddressBook extends JFrame {
 
-    private Properties contacts;
+    protected Properties contacts;
     private ContactModel repertoire;
     private JTextPane visualisationInfos;
 

@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class SaveAction extends AbstractAction {
 
@@ -16,7 +19,17 @@ public class SaveAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream("./addressbook.ab");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            ab.contacts.store(out, "My AdressBook");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
