@@ -1,14 +1,9 @@
 package actions;
 
-import base.AddressBook;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class AboutAction extends AbstractAction {
 

@@ -7,9 +7,9 @@ import actions.SaveAction;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class AddressBook extends JFrame {
@@ -17,22 +17,102 @@ public class AddressBook extends JFrame {
     private Properties contacts;
     private ContactModel listeNomsContacts;
     private JTextPane visualisationInfos;
+    private final Path appConfigFilePath = Paths.get(System.getProperty("user.home"), ".bryan_adressbook", "config.properties");
+    private Properties appConfig;
 
     public static void main(String[] args) {
         AddressBook ab = new AddressBook();
 
+        ab.initFiles();
         ab.initContacts();
         ab.initFrame();
         ab.initWindow();
     }
 
+    private void initFiles() {
+        initConfigFile();
+        initAnnuaireFile();
+    }
+
+    private void initConfigFile() {
+        File appConfigFile = new File(String.valueOf(appConfigFilePath));
+        appConfigFile.getParentFile().mkdirs();
+        appConfig = new Properties();
+
+        if (!appConfigFile.isFile()) {
+            try {
+                appConfigFile.createNewFile();
+                chooseAnnuairePath();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Impossible de créer le fichier de configuration ! Essayer de lancer l'application en mode admin.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+                System.exit(-1);
+            }
+        } else {
+            try (InputStream in = new FileInputStream(String.valueOf(appConfigFilePath))) {
+                appConfig.load(in);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Erreur lors du chargement de la configuration de l'application.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+                System.exit(-1);
+            }
+        }
+    }
+
+    private void chooseAnnuairePath() {
+        JOptionPane.showMessageDialog(null, "Veuillez sélectionner où sera sauvegardé votre annuaire", "Emplacement de l'annuaire", JOptionPane.QUESTION_MESSAGE);
+        JFileChooser browser = new JFileChooser();
+        browser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        browser.setDialogTitle("Emplacement du fichier annuaire");
+        browser.showSaveDialog(null);
+
+        Path annuairePath = Paths.get(browser.getSelectedFile().getPath(), "annuaire.properties");
+        File annuaireFile = new File(String.valueOf(annuairePath));
+        try {
+            annuaireFile.createNewFile();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Impossible d'écrire le fichier annuaire.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
+
+        appConfig.setProperty("annuairePath", String.valueOf(annuairePath));
+        saveConfig();
+    }
+
+    private void saveConfig() {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(String.valueOf(appConfigFilePath));
+            appConfig.store(out, "AdressBook Configuration");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Erreur lors de la sauvegarde de la configuration de l'application.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
+    }
+
+    private void initAnnuaireFile() {
+
+        if (appConfig.getProperty("annuairePath") == null) {
+            JOptionPane.showMessageDialog(null, "Config de l'application invalide.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
+
+        Path annuairePath = Paths.get(appConfig.getProperty("annuairePath"));
+        File annuaireFile = new File(String.valueOf(annuairePath));
+
+        if (!annuaireFile.isFile()) {
+            JOptionPane.showMessageDialog(null, "Fichier annuaire invalide.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
+
+    }
+
     private void initContacts() {
         this.contacts = new Properties();
 
-        try (InputStream in = new FileInputStream("./addressbook.ab")) {
+        try (InputStream in = new FileInputStream(String.valueOf(Paths.get(appConfig.getProperty("annuairePath"))))) {
             contacts.load(in);
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erreur lors de la lecture des contacts.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
         }
     }
 
@@ -105,7 +185,6 @@ public class AddressBook extends JFrame {
     }
 
 
-
     public void addContact(String nom, String infos) {
         setContact(nom, infos);
         listeNomsContacts.addElement(nom);
@@ -113,6 +192,10 @@ public class AddressBook extends JFrame {
 
     public Properties getContacts() {
         return contacts;
+    }
+
+    public Path getAnnuairePath() {
+        return Paths.get(appConfig.getProperty("annuairePath"));
     }
 
     /*
@@ -124,7 +207,7 @@ public class AddressBook extends JFrame {
             - ex14 : trier la liste des entrées du répertoire par ordre alphabétique (cf collections)
             - ex15 : menu popup comme dans la démo (??)
         Partie "en plus"
-            - choix de l'emplacement du fichier de l'adressbook
+            - modif de l'emplacement du fichier de l'adressbook
             - internationalisation
         A penser pour rendu :
             - doc_private & doc_public
