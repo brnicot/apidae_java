@@ -44,21 +44,24 @@ public class AddressBook extends JFrame {
                 appConfigFile.createNewFile();
                 chooseAnnuairePath();
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Impossible de créer le fichier de configuration ! Essayer de lancer l'application en mode admin.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
-                System.exit(-1);
+                fatalError("Impossible de créer le fichier de configuration ! Essayer de lancer l'application en mode admin.");
             }
         } else {
             try (InputStream in = new FileInputStream(String.valueOf(appConfigFilePath))) {
                 appConfig.load(in);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Erreur lors du chargement de la configuration de l'application.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
-                System.exit(-1);
+                fatalError("Erreur lors du chargement de la configuration de l'application.");
             }
         }
     }
 
+    private void fatalError(String s) {
+        JOptionPane.showMessageDialog(null, s, "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+        System.exit(-1);
+    }
+
     private void chooseAnnuairePath() {
-        JOptionPane.showMessageDialog(null, "Veuillez sélectionner où sera sauvegardé votre annuaire", "Emplacement de l'annuaire", JOptionPane.QUESTION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Veuillez sélectionner LE DOSSIER où sera sauvegardé votre annuaire", "Emplacement de l'annuaire", JOptionPane.QUESTION_MESSAGE);
         JFileChooser browser = new JFileChooser();
         browser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         browser.setDialogTitle("Emplacement du fichier annuaire");
@@ -69,8 +72,7 @@ public class AddressBook extends JFrame {
         try {
             annuaireFile.createNewFile();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Impossible d'écrire le fichier annuaire.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
+            fatalError("Impossible d'écrire le fichier annuaire.");
         }
 
         appConfig.setProperty("annuairePath", String.valueOf(annuairePath));
@@ -83,24 +85,21 @@ public class AddressBook extends JFrame {
             out = new FileOutputStream(String.valueOf(appConfigFilePath));
             appConfig.store(out, "AdressBook Configuration");
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Erreur lors de la sauvegarde de la configuration de l'application.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
+            fatalError("Erreur lors de la sauvegarde de la configuration de l'application.");
         }
     }
 
     private void initAnnuaireFile() {
 
         if (appConfig.getProperty("annuairePath") == null) {
-            JOptionPane.showMessageDialog(null, "Config de l'application invalide.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
+            fatalError("Config de l'application invalide.");
         }
 
         Path annuairePath = Paths.get(appConfig.getProperty("annuairePath"));
         File annuaireFile = new File(String.valueOf(annuairePath));
 
         if (!annuaireFile.isFile()) {
-            JOptionPane.showMessageDialog(null, "Fichier annuaire invalide.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
+            fatalError("Fichier annuaire invalide.");
         }
 
     }
@@ -111,8 +110,7 @@ public class AddressBook extends JFrame {
         try (InputStream in = new FileInputStream(String.valueOf(Paths.get(appConfig.getProperty("annuairePath"))))) {
             contacts.load(in);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Erreur lors de la lecture des contacts.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
+            fatalError("Erreur lors de la lecture des contacts.");
         }
     }
 
