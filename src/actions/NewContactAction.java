@@ -24,6 +24,7 @@ public class NewContactAction extends AbstractAction {
         String infos = JOptionPane.showInputDialog(null, "Informations du contact", "Création d'un contact", JOptionPane.QUESTION_MESSAGE);
 
         ab.addContact(nom, infos);
+        ab.sort();
     }
 
 }

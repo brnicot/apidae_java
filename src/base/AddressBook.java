@@ -16,7 +16,7 @@ public class AddressBook extends JFrame {
 
     private Properties contacts;
     private ContactModel listeNomsContacts;
-    private JTextPane visualisationInfos;
+    private JTextPane cadreInfos;
     private final Path appConfigFilePath = Paths.get(System.getProperty("user.home"), ".bryan_adressbook", "config.properties");
     private Properties appConfig;
 
@@ -121,7 +121,8 @@ public class AddressBook extends JFrame {
         JList<String> listeContacts = new JList<>(listeNomsContacts);
 
         listeContacts.addListSelectionListener(listSelectionEvent -> {
-            if (!listSelectionEvent.getValueIsAdjusting()) {
+            // on s'assure que la valeur n'est pas null car sinon quand on sort() la sélection se fait sur un truc null et tout plante
+            if (!listSelectionEvent.getValueIsAdjusting() && listeContacts.getSelectedValue() != null) {
                 choixContact(listeContacts.getSelectedValue());
             }
         });
@@ -130,11 +131,11 @@ public class AddressBook extends JFrame {
         scroll.setViewportView(listeContacts);
         this.add(scroll, BorderLayout.NORTH);
 
-        visualisationInfos = new JTextPane();
-        this.add(visualisationInfos, BorderLayout.CENTER);
+        cadreInfos = new JTextPane();
+        this.add(cadreInfos, BorderLayout.CENTER);
 
-        visualisationInfos.addCaretListener(caretEvent ->
-                setContact(listeContacts.getSelectedValue(), visualisationInfos.getText())
+        cadreInfos.addCaretListener(caretEvent ->
+                setContact(listeContacts.getSelectedValue(), cadreInfos.getText())
         );
     }
 
@@ -175,25 +176,28 @@ public class AddressBook extends JFrame {
     }
 
     private void choixContact(String selectedContact) {
-        setVisualisationInfosText(contacts.getProperty(selectedContact));
+        setCadreInfosText(contacts.getProperty(selectedContact));
     }
 
-    private void setVisualisationInfosText(String s) {
-        this.visualisationInfos.setText(s);
+    private void setCadreInfosText(String s) {
+        this.cadreInfos.setText(s);
     }
 
-
-    public void addContact(String nom, String infos) {
-        setContact(nom, infos);
-        listeNomsContacts.addElement(nom);
+    public Path getAnnuairePath() {
+        return Paths.get(appConfig.getProperty("annuairePath"));
     }
 
     public Properties getContacts() {
         return contacts;
     }
 
-    public Path getAnnuairePath() {
-        return Paths.get(appConfig.getProperty("annuairePath"));
+    public void addContact(String nom, String infos) {
+        setContact(nom, infos);
+        listeNomsContacts.addElement(nom);
+    }
+
+    public void sort() {
+        listeNomsContacts.sort();
     }
 
     /*
@@ -202,7 +206,6 @@ public class AddressBook extends JFrame {
             - ex11 : quand on quitte, si modifs, alors demander si on veut sauvegarder
                 listen de l'event du bouton & de l'action !!
             - ex12/13 : toolbar avec les mêmes actions que dans la menubar
-            - ex14 : trier la liste des entrées du répertoire par ordre alphabétique (cf collections)
             - ex15 : menu popup comme dans la démo (??)
         Partie "en plus"
             - modif de l'emplacement du fichier de l'adressbook
