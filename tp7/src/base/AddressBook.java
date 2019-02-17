@@ -4,6 +4,7 @@ import events.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
@@ -14,14 +15,15 @@ import java.util.Properties;
 public class AddressBook extends JFrame {
 
     private Properties contacts;
-    private ContactModel listeNomsContacts;
-    private JTextPane cadreInfos;
+    private JList<String> contactsJList;
+    private ContactModel contactsNameList;
+    private JTextPane infosPanel;
     private final Path appConfigFilePath = Paths.get(System.getProperty("user.home"), ".bryan_adressbook", "config.properties");
     private Properties appConfig;
 
-    // Références car on en a besoin pour gérer l'event de sauvegarde
-    public JButton saveBtn;
-    public SaveAction saveAction;
+    // Références car on en a besoin pour modifier la possibilité de sauvegarder & la fermeture
+    private JButton saveBtn;
+    private SaveAction saveAction;
 
     public static void main(String[] args) {
         AddressBook ab = new AddressBook();
@@ -30,7 +32,6 @@ public class AddressBook extends JFrame {
         ab.initContacts();
         ab.initFrame();
         ab.initWindow();
-
     }
 
     private void initFiles() {
@@ -121,27 +122,27 @@ public class AddressBook extends JFrame {
     private void initFrame() {
         initMenu();
 
-        listeNomsContacts = new ContactModel(this.contacts);
-        JList<String> listeContacts = new JList<>(listeNomsContacts);
+        contactsNameList = new ContactModel(this.contacts);
+        contactsJList = new JList<>(contactsNameList);
 
-        listeContacts.addListSelectionListener(listSelectionEvent -> {
+        contactsJList.addListSelectionListener(listSelectionEvent -> {
             // on s'assure que la valeur n'est pas null car sinon quand on sort() la sélection se fait sur un truc null et tout plante
-            if (!listSelectionEvent.getValueIsAdjusting() && listeContacts.getSelectedValue() != null) {
-                choixContact(listeContacts.getSelectedValue());
+            if (!listSelectionEvent.getValueIsAdjusting() && getSelectedContact() != null) {
+                chooseContact(getSelectedContact());
             }
         });
 
         JScrollPane scroll = new JScrollPane();
-        scroll.setViewportView(listeContacts);
+        scroll.setViewportView(contactsJList);
         this.add(scroll, BorderLayout.NORTH);
 
-        cadreInfos = new JTextPane();
-        this.add(cadreInfos, BorderLayout.CENTER);
+        infosPanel = new JTextPane();
+        this.add(infosPanel, BorderLayout.CENTER);
 
-        cadreInfos.addKeyListener(new KeyAdapter() {
+        infosPanel.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent keyEvent) {
-                setContact(listeContacts.getSelectedValue(), cadreInfos.getText());
+            public void keyReleased(KeyEvent keyEvent) {
+                setContactInfos(getSelectedContact(), infosPanel.getText());
             }
         });
 
@@ -151,11 +152,11 @@ public class AddressBook extends JFrame {
     private void initToolbar() {
         JToolBar toolbar = new JToolBar();
 
-        JButton newContact = new JButton("Nouveau contact");
+        JButton newContact = new JButton("Créer un contact");
         newContact.addActionListener(new NewContactAction(this));
         toolbar.add(newContact);
 
-        JButton deleteContact = new JButton("Supprimer contact");
+        JButton deleteContact = new JButton("Supprimer le contact");
         deleteContact.addActionListener(new DeleteContactAction(this));
         toolbar.add(deleteContact);
 
@@ -164,6 +165,7 @@ public class AddressBook extends JFrame {
         toolbar.add(saveBtn);
 
         this.add(toolbar, BorderLayout.SOUTH);
+        setSaveableState(false);
     }
 
     private void initWindow() {
@@ -193,6 +195,7 @@ public class AddressBook extends JFrame {
         JMenuItem deleteContact = new JMenuItem();
         deleteContact.setAction(new DeleteContactAction(this));
         contacts.add(newContact);
+        contacts.add(deleteContact);
 
         menu.add(file);
         menu.add(contacts);
@@ -200,18 +203,17 @@ public class AddressBook extends JFrame {
         setJMenuBar(menu);
     }
 
-    private void setContact(String selectedValue, String text) {
+    private void setContactInfos(String selectedValue, String text) {
         this.contacts.setProperty(selectedValue, text);
-        this.saveAction.setEnabled(true);
-        this.saveBtn.setEnabled(true);
+        setSaveableState(true);
     }
 
-    private void choixContact(String selectedContact) {
-        setCadreInfosText(contacts.getProperty(selectedContact));
+    private void chooseContact(String selectedContact) {
+        setInfosPanelText(contacts.getProperty(selectedContact));
     }
 
-    private void setCadreInfosText(String s) {
-        this.cadreInfos.setText(s);
+    private void setInfosPanelText(String s) {
+        this.infosPanel.setText(s);
     }
 
     public Path getAnnuairePath() {
@@ -223,20 +225,50 @@ public class AddressBook extends JFrame {
     }
 
     public void addContact(String nom, String infos) {
-        setContact(nom, infos);
-        listeNomsContacts.addElement(nom);
+        setContactInfos(nom, infos);
+        contactsNameList.addElement(nom);
     }
 
     public void sort() {
-        listeNomsContacts.sort();
+        contactsNameList.sort();
+    }
+
+    private String getSelectedContact() {
+        return contactsJList.getSelectedValue();
+    }
+
+    private void removeContact(int i) {
+        contactsNameList.remove(i);
+    }
+
+    public void deleteSelectedContact() {
+        getContacts().remove(getSelectedContact());
+
+        int indexASupprimer = contactsJList.getSelectedIndex();
+        contactsJList.setSelectedIndex(0);
+        removeContact(indexASupprimer);
+
+        setSaveableState(true);
+    }
+
+    public void setSaveableState(boolean b) {
+        saveAction.setEnabled(b);
+        saveBtn.setEnabled(b);
+    }
+
+    public boolean getSaveableState() {
+        return saveAction.isEnabled();
+    }
+
+    public void triggerSaveEvent() {
+        saveAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
     }
 
     /*
     TODO :
         Partie Tp
-            - btn suppr
+            - icones
             - ex15 : menu popup comme dans la démo (??)
-            - griser boutons toolbar ?
         Partie "en plus"
             - modif de l'emplacement du fichier de l'adressbook
             - internationalisation
