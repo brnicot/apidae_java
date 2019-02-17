@@ -25,7 +25,6 @@ public class NewContactAction extends AbstractAction {
 
         ab.addContact(nom, infos);
         ab.sort();
-        ab.setModificationsNonSauvegardees(true);
     }
 
 }

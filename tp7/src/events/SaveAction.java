@@ -32,7 +32,8 @@ public class SaveAction extends AbstractAction {
             System.exit(-1);
         }
 
-        ab.setModificationsNonSauvegardees(false);
+        this.setEnabled(false);
+        this.ab.saveBtn.setEnabled(false);
     }
 
 }

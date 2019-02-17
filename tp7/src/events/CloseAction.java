@@ -18,10 +18,10 @@ public class CloseAction extends WindowAdapter {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        if(ab.getModificationsNonSauvegardees()) {
+        if(ab.saveAction.isEnabled()) {
             int choice = JOptionPane.showConfirmDialog(null, "Voulez-vous enregistrer les modifications effectuées ?", "Modifications non sauvegardées", JOptionPane.YES_NO_OPTION);
             if(choice == 0) {
-                for(ActionListener al: ab.save.getActionListeners()) {
+                for(ActionListener al: ab.saveBtn.getActionListeners()) {
                     al.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                 }
             }
