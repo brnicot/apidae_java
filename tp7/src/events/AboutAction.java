@@ -1,4 +1,4 @@
-package actions;
+package events;
 
 import javax.swing.*;
 import java.awt.*;

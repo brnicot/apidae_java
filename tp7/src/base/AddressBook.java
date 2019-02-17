@@ -1,12 +1,14 @@
 package base;
 
-import actions.AboutAction;
-import actions.NewContactAction;
-import actions.QuitAction;
-import actions.SaveAction;
+import events.AboutAction;
+import events.CloseAction;
+import events.NewContactAction;
+import events.SaveAction;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +21,8 @@ public class AddressBook extends JFrame {
     private JTextPane cadreInfos;
     private final Path appConfigFilePath = Paths.get(System.getProperty("user.home"), ".bryan_adressbook", "config.properties");
     private Properties appConfig;
+    private boolean modificationsNonSauvegardees;
+    public JMenuItem save;
 
     public static void main(String[] args) {
         AddressBook ab = new AddressBook();
@@ -27,6 +31,8 @@ public class AddressBook extends JFrame {
         ab.initContacts();
         ab.initFrame();
         ab.initWindow();
+
+        ab.modificationsNonSauvegardees = false;
     }
 
     private void initFiles() {
@@ -80,7 +86,7 @@ public class AddressBook extends JFrame {
     }
 
     private void saveConfig() {
-        FileOutputStream out = null;
+        FileOutputStream out;
         try {
             out = new FileOutputStream(String.valueOf(appConfigFilePath));
             appConfig.store(out, "AdressBook Configuration");
@@ -134,15 +140,20 @@ public class AddressBook extends JFrame {
         cadreInfos = new JTextPane();
         this.add(cadreInfos, BorderLayout.CENTER);
 
-        cadreInfos.addCaretListener(caretEvent ->
-                setContact(listeContacts.getSelectedValue(), cadreInfos.getText())
-        );
+        cadreInfos.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent keyEvent) {
+                setContact(listeContacts.getSelectedValue(), cadreInfos.getText());
+            }
+        });
+
     }
 
     private void initWindow() {
         this.setTitle("AddressBook");
         this.setSize(450, 300);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.addWindowListener(new CloseAction(this));
         this.setVisible(true);
     }
 
@@ -150,13 +161,11 @@ public class AddressBook extends JFrame {
         JMenuBar menu = new JMenuBar();
 
         JMenu file = new JMenu("Ficher");
-        JMenuItem save, about, quit;
+        JMenuItem about;
         save = new JMenuItem();
         save.setAction(new SaveAction(this));
         about = new JMenuItem();
         about.setAction(new AboutAction());
-        quit = new JMenuItem();
-        quit.setAction(new QuitAction());
         file.add(save);
         file.add(about);
 
@@ -173,6 +182,7 @@ public class AddressBook extends JFrame {
 
     private void setContact(String selectedValue, String text) {
         this.contacts.setProperty(selectedValue, text);
+        this.modificationsNonSauvegardees = true;
     }
 
     private void choixContact(String selectedContact) {
@@ -200,13 +210,20 @@ public class AddressBook extends JFrame {
         listeNomsContacts.sort();
     }
 
+    public void setModificationsNonSauvegardees(boolean b) {
+        this.modificationsNonSauvegardees = b;
+    }
+
+    public boolean getModificationsNonSauvegardees() {
+        return this.modificationsNonSauvegardees;
+    }
+
     /*
     TODO :
         Partie TP
-            - ex11 : quand on quitte, si modifs, alors demander si on veut sauvegarder
-                listen de l'event du bouton & de l'action !!
-            - ex12/13 : toolbar avec les mêmes actions que dans la menubar
+            - ex12/13 : toolbar avec les mêmes events que dans la menubar
             - ex15 : menu popup comme dans la démo (??)
+            - griser boutons toolbar ?
         Partie "en plus"
             - modif de l'emplacement du fichier de l'adressbook
             - internationalisation

@@ -1,4 +1,4 @@
-package actions;
+package events;
 
 import base.AddressBook;
 
@@ -22,7 +22,7 @@ public class SaveAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        FileOutputStream out = null;
+        FileOutputStream out;
 
         try {
             out = new FileOutputStream(String.valueOf(ab.getAnnuairePath()));
@@ -31,6 +31,8 @@ public class SaveAction extends AbstractAction {
             JOptionPane.showMessageDialog(null, "Erreur lors de la sauvegarde de l'annuaire.", "Erreur fatale", JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         }
+
+        ab.setModificationsNonSauvegardees(false);
     }
 
 }
