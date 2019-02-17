@@ -65,7 +65,7 @@ public class AddressBook extends JFrame {
         System.exit(-1);
     }
 
-    private void chooseAnnuairePath() {
+    public void chooseAnnuairePath() {
         JOptionPane.showMessageDialog(null, "Veuillez sélectionner LE DOSSIER où sera sauvegardé votre annuaire", "Emplacement de l'annuaire", JOptionPane.QUESTION_MESSAGE);
         JFileChooser browser = new JFileChooser();
         browser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -181,13 +181,16 @@ public class AddressBook extends JFrame {
         JMenuBar menu = new JMenuBar();
 
         JMenu file = new JMenu("Ficher");
-        JMenuItem saveMenuItem, about;
+        JMenuItem saveMenuItem, changeAnnuaireFile, about;
         saveMenuItem = new JMenuItem();
         saveAction = new SaveAction(this);
         saveMenuItem.setAction(saveAction);
+        changeAnnuaireFile = new JMenuItem();
+        changeAnnuaireFile.setAction(new ChangeAnnuaireFileAction(this));
         about = new JMenuItem();
         about.setAction(new AboutAction());
         file.add(saveMenuItem);
+        file.add(changeAnnuaireFile);
         file.add(about);
 
         JMenu contacts = new JMenu("Contacts");
@@ -272,7 +275,6 @@ public class AddressBook extends JFrame {
     /*
     TODO :
         Partie "en plus"
-            - modif de l'emplacement du fichier de l'adressbook
             - internationalisation
         A penser pour rendu :
             - doc_private & doc_public
