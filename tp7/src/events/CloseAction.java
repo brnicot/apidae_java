@@ -21,9 +21,7 @@ public class CloseAction extends WindowAdapter {
         if(ab.saveAction.isEnabled()) {
             int choice = JOptionPane.showConfirmDialog(null, "Voulez-vous enregistrer les modifications effectuées ?", "Modifications non sauvegardées", JOptionPane.YES_NO_OPTION);
             if(choice == 0) {
-                for(ActionListener al: ab.saveBtn.getActionListeners()) {
-                    al.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
-                }
+                ab.saveAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
             }
         }
     }
