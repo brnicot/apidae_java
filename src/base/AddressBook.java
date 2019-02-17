@@ -56,7 +56,7 @@ public class AddressBook extends JFrame {
     }
 
     private void fatalError(String s) {
-        JOptionPane.showMessageDialog(null, s, "Erreur fatale", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, s, "Erreur fatale !", JOptionPane.ERROR_MESSAGE);
         System.exit(-1);
     }
 
