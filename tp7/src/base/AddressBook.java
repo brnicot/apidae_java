@@ -131,6 +131,7 @@ public class AddressBook extends JFrame {
                 chooseContact(getSelectedContact());
             }
         });
+        contactsJList.addMouseListener(new ContextMenuAction(this));
 
         JScrollPane scroll = new JScrollPane();
         scroll.setViewportView(contactsJList);
@@ -264,11 +265,12 @@ public class AddressBook extends JFrame {
         saveAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
     }
 
+    public void chooseContactByLocation(Point p) {
+        contactsJList.setSelectedIndex(contactsJList.locationToIndex(p));
+    }
+
     /*
     TODO :
-        Partie Tp
-            - icones
-            - ex15 : menu popup comme dans la démo (??)
         Partie "en plus"
             - modif de l'emplacement du fichier de l'adressbook
             - internationalisation
