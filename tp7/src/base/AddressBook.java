@@ -1,9 +1,6 @@
 package base;
 
-import events.AboutAction;
-import events.CloseAction;
-import events.NewContactAction;
-import events.SaveAction;
+import events.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +18,10 @@ public class AddressBook extends JFrame {
     private JTextPane cadreInfos;
     private final Path appConfigFilePath = Paths.get(System.getProperty("user.home"), ".bryan_adressbook", "config.properties");
     private Properties appConfig;
-    private boolean modificationsNonSauvegardees;
-    public JMenuItem save;
+
+    // Références car on en a besoin pour gérer l'event de sauvegarde
+    public JButton saveBtn;
+    public SaveAction saveAction;
 
     public static void main(String[] args) {
         AddressBook ab = new AddressBook();
@@ -32,7 +31,6 @@ public class AddressBook extends JFrame {
         ab.initFrame();
         ab.initWindow();
 
-        ab.modificationsNonSauvegardees = false;
     }
 
     private void initFiles() {
@@ -147,6 +145,25 @@ public class AddressBook extends JFrame {
             }
         });
 
+        initToolbar();
+    }
+
+    private void initToolbar() {
+        JToolBar toolbar = new JToolBar();
+
+        JButton newContact = new JButton("Nouveau contact");
+        newContact.addActionListener(new NewContactAction(this));
+        toolbar.add(newContact);
+
+        JButton deleteContact = new JButton("Supprimer contact");
+        deleteContact.addActionListener(new DeleteContactAction(this));
+        toolbar.add(deleteContact);
+
+        saveBtn = new JButton("Sauvegarder");
+        saveBtn.addActionListener(saveAction);
+        toolbar.add(saveBtn);
+
+        this.add(toolbar, BorderLayout.SOUTH);
     }
 
     private void initWindow() {
@@ -161,18 +178,21 @@ public class AddressBook extends JFrame {
         JMenuBar menu = new JMenuBar();
 
         JMenu file = new JMenu("Ficher");
-        JMenuItem about;
-        save = new JMenuItem();
-        save.setAction(new SaveAction(this));
+        JMenuItem saveMenuItem, about;
+        saveMenuItem = new JMenuItem();
+        saveAction = new SaveAction(this);
+        saveMenuItem.setAction(saveAction);
         about = new JMenuItem();
         about.setAction(new AboutAction());
-        file.add(save);
+        file.add(saveMenuItem);
         file.add(about);
 
         JMenu contacts = new JMenu("Contacts");
-        JMenuItem new_contact = new JMenuItem();
-        new_contact.setAction(new NewContactAction(this));
-        contacts.add(new_contact);
+        JMenuItem newContact = new JMenuItem();
+        newContact.setAction(new NewContactAction(this));
+        JMenuItem deleteContact = new JMenuItem();
+        deleteContact.setAction(new DeleteContactAction(this));
+        contacts.add(newContact);
 
         menu.add(file);
         menu.add(contacts);
@@ -182,7 +202,8 @@ public class AddressBook extends JFrame {
 
     private void setContact(String selectedValue, String text) {
         this.contacts.setProperty(selectedValue, text);
-        this.modificationsNonSauvegardees = true;
+        this.saveAction.setEnabled(true);
+        this.saveBtn.setEnabled(true);
     }
 
     private void choixContact(String selectedContact) {
@@ -210,18 +231,10 @@ public class AddressBook extends JFrame {
         listeNomsContacts.sort();
     }
 
-    public void setModificationsNonSauvegardees(boolean b) {
-        this.modificationsNonSauvegardees = b;
-    }
-
-    public boolean getModificationsNonSauvegardees() {
-        return this.modificationsNonSauvegardees;
-    }
-
     /*
     TODO :
-        Partie TP
-            - ex12/13 : toolbar avec les mêmes events que dans la menubar
+        Partie Tp
+            - btn suppr
             - ex15 : menu popup comme dans la démo (??)
             - griser boutons toolbar ?
         Partie "en plus"
