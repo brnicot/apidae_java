@@ -13,7 +13,7 @@ public class DeleteContactAction extends AbstractAction {
 
     public DeleteContactAction(AddressBook ab) {
         this.ab = ab;
-        putValue(Action.NAME, "Supprimer le contact");
+        putValue(Action.NAME, ab.getMessages().getString("contact_delete"));
         putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
         putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
     }

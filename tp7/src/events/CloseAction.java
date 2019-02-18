@@ -17,7 +17,7 @@ public class CloseAction extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {
         if(ab.getSaveableState()) {
-            int choice = JOptionPane.showConfirmDialog(null, "Voulez-vous enregistrer les modifications effectuées ?", "Modifications non sauvegardées", JOptionPane.YES_NO_OPTION);
+            int choice = JOptionPane.showConfirmDialog(null, ab.getMessages().getString("save_unsaved_changes"), ab.getMessages().getString("unsaved_changes"), JOptionPane.YES_NO_OPTION);
             if(choice == 0) {
                 ab.triggerSaveEvent();
             }

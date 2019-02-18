@@ -15,7 +15,7 @@ public class ContextMenuAction extends MouseAdapter {
         this.ab = ab;
 
         popupMenu = new JPopupMenu();
-        JMenuItem deleteContact = new JMenuItem("Supprimer le contact");
+        JMenuItem deleteContact = new JMenuItem(ab.getMessages().getString("contact_delete"));
         deleteContact.setAction(new DeleteContactAction(ab));
         popupMenu.add(deleteContact);
     }

@@ -10,7 +10,9 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 public class AddressBook extends JFrame {
 
@@ -18,20 +20,29 @@ public class AddressBook extends JFrame {
     private JList<String> contactsJList;
     private ContactModel contactsNameList;
     private JTextPane infosPanel;
-    private final Path appConfigFilePath = Paths.get(System.getProperty("user.home"), ".bryan_adressbook", "config.properties");
+    private final Path appConfigFilePath = Paths.get(System.getProperty("user.home"), ".bryan_addressbook", "config.properties");
     private Properties appConfig;
 
     // Références car on en a besoin pour modifier la possibilité de sauvegarder & la fermeture
     private JButton saveBtn;
     private SaveAction saveAction;
 
+    // Lang
+    private ResourceBundle messages;
+
     public static void main(String[] args) {
         AddressBook ab = new AddressBook();
 
+        ab.initLang();
         ab.initFiles();
         ab.initContacts();
         ab.initFrame();
         ab.initWindow();
+    }
+
+    private void initLang() {
+        Locale currentLocale = new Locale("fr", "FR");
+        messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
     }
 
     private void initFiles() {
@@ -49,27 +60,27 @@ public class AddressBook extends JFrame {
                 appConfigFile.createNewFile();
                 chooseAnnuairePath();
             } catch (IOException e) {
-                fatalError("Impossible de créer le fichier de configuration ! Essayer de lancer l'application en mode admin.");
+                fatalError(messages.getString("error_config_file_creation"));
             }
         } else {
             try (InputStream in = new FileInputStream(String.valueOf(appConfigFilePath))) {
                 appConfig.load(in);
             } catch (IOException e) {
-                fatalError("Erreur lors du chargement de la configuration de l'application.");
+                fatalError(messages.getString("error_config_file_loading"));
             }
         }
     }
 
     private void fatalError(String s) {
-        JOptionPane.showMessageDialog(null, s, "Erreur fatale !", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, s, messages.getString("error_fatal"), JOptionPane.ERROR_MESSAGE);
         System.exit(-1);
     }
 
     public void chooseAnnuairePath() {
-        JOptionPane.showMessageDialog(null, "Veuillez sélectionner LE DOSSIER où sera sauvegardé votre annuaire", "Emplacement de l'annuaire", JOptionPane.QUESTION_MESSAGE);
+        JOptionPane.showMessageDialog(null, messages.getString("choose_addressbook_dir"), messages.getString("addressbook_dir"), JOptionPane.QUESTION_MESSAGE);
         JFileChooser browser = new JFileChooser();
         browser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        browser.setDialogTitle("Emplacement du fichier annuaire");
+        browser.setDialogTitle(messages.getString("addressbook_dir"));
         browser.showSaveDialog(null);
 
         Path annuairePath = Paths.get(browser.getSelectedFile().getPath(), "annuaire.properties");
@@ -77,7 +88,7 @@ public class AddressBook extends JFrame {
         try {
             annuaireFile.createNewFile();
         } catch (IOException e) {
-            fatalError("Impossible d'écrire le fichier annuaire.");
+            fatalError(messages.getString("error_addressbook_creation"));
         }
 
         appConfig.setProperty("annuairePath", String.valueOf(annuairePath));
@@ -88,23 +99,23 @@ public class AddressBook extends JFrame {
         FileOutputStream out;
         try {
             out = new FileOutputStream(String.valueOf(appConfigFilePath));
-            appConfig.store(out, "AdressBook Configuration");
+            appConfig.store(out, "AddressBook Configuration");
         } catch (IOException e) {
-            fatalError("Erreur lors de la sauvegarde de la configuration de l'application.");
+            fatalError(messages.getString("error_config_file_save"));
         }
     }
 
     private void initAnnuaireFile() {
 
         if (appConfig.getProperty("annuairePath") == null) {
-            fatalError("Config de l'application invalide.");
+            fatalError(messages.getString("error_config_file_invalid"));
         }
 
         Path annuairePath = Paths.get(appConfig.getProperty("annuairePath"));
         File annuaireFile = new File(String.valueOf(annuairePath));
 
         if (!annuaireFile.isFile()) {
-            fatalError("Fichier annuaire invalide.");
+            fatalError(messages.getString("error_addressbook_invalid"));
         }
 
     }
@@ -115,7 +126,7 @@ public class AddressBook extends JFrame {
         try (InputStream in = new FileInputStream(String.valueOf(Paths.get(appConfig.getProperty("annuairePath"))))) {
             contacts.load(in);
         } catch (IOException e) {
-            fatalError("Erreur lors de la lecture des contacts.");
+            fatalError(messages.getString("error_addressbook_read"));
         }
     }
 
@@ -153,15 +164,15 @@ public class AddressBook extends JFrame {
     private void initToolbar() {
         JToolBar toolbar = new JToolBar();
 
-        JButton newContact = new JButton("Créer un contact");
+        JButton newContact = new JButton(messages.getString("contact_create"));
         newContact.addActionListener(new NewContactAction(this));
         toolbar.add(newContact);
 
-        JButton deleteContact = new JButton("Supprimer le contact");
+        JButton deleteContact = new JButton(messages.getString("contact_delete"));
         deleteContact.addActionListener(new DeleteContactAction(this));
         toolbar.add(deleteContact);
 
-        saveBtn = new JButton("Sauvegarder");
+        saveBtn = new JButton(messages.getString("save"));
         saveBtn.addActionListener(saveAction);
         toolbar.add(saveBtn);
 
@@ -180,7 +191,7 @@ public class AddressBook extends JFrame {
     private void initMenu() {
         JMenuBar menu = new JMenuBar();
 
-        JMenu file = new JMenu("Ficher");
+        JMenu file = new JMenu(messages.getString("file"));
         JMenuItem saveMenuItem, changeAnnuaireFile, about;
         saveMenuItem = new JMenuItem();
         saveAction = new SaveAction(this);
@@ -188,12 +199,12 @@ public class AddressBook extends JFrame {
         changeAnnuaireFile = new JMenuItem();
         changeAnnuaireFile.setAction(new ChangeAnnuaireFileAction(this));
         about = new JMenuItem();
-        about.setAction(new AboutAction());
+        about.setAction(new AboutAction(this));
         file.add(saveMenuItem);
         file.add(changeAnnuaireFile);
         file.add(about);
 
-        JMenu contacts = new JMenu("Contacts");
+        JMenu contacts = new JMenu(messages.getString("contacts"));
         JMenuItem newContact = new JMenuItem();
         newContact.setAction(new NewContactAction(this));
         JMenuItem deleteContact = new JMenuItem();
@@ -270,6 +281,10 @@ public class AddressBook extends JFrame {
 
     public void chooseContactByLocation(Point p) {
         contactsJList.setSelectedIndex(contactsJList.locationToIndex(p));
+    }
+
+    public ResourceBundle getMessages() {
+        return messages;
     }
 
     /*
