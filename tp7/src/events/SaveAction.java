@@ -9,10 +9,21 @@ import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * Action triggered when the user saves contacts
+ */
 public class SaveAction extends AbstractAction {
 
+    /**
+     * Cross reference to the address book
+     */
     private AddressBook ab;
 
+    /**
+     * Instantiates a new Save action.
+     *
+     * @param ab Address book cross reference
+     */
     public SaveAction(AddressBook ab) {
         this.ab = ab;
         putValue(Action.NAME,  ab.getMessages().getString("save"));
@@ -20,6 +31,10 @@ public class SaveAction extends AbstractAction {
         putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
     }
 
+    /**
+     * Store contacts to the address book file & handles errors
+     * @param actionEvent Action performed
+     */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         FileOutputStream out;

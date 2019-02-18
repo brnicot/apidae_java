@@ -10,29 +10,74 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
+/**
+ * Application core class
+ */
 public class AddressBook extends JFrame {
 
+    /**
+     * Properties containing the contact name & contact details
+     */
     private Properties contacts;
+
+    /**
+     * JList containing contacts name
+     */
     private JList<String> contactsJList;
+
+    /**
+     * Model linked to the JList containing contacts name
+     */
     private ContactModel contactsNameList;
+
+    /**
+     * Text panel of the lower part of the frame. It contains the contact details
+     */
     private JTextPane infosPanel;
+
+    /**
+     * Config file path
+     */
     private final Path appConfigFilePath = Paths.get(System.getProperty("user.home"), ".bryan_addressbook", "config.properties");
+
+    /**
+     * Application config
+     */
     private Properties appConfig;
 
-    // Références car on en a besoin pour modifier la possibilité de sauvegarder & la fermeture
+    /**
+     * Components to update on locale change
+     */
+    private HashMap<AbstractButton, String> translationTable;
+
+    /**
+     * Button used to save contacts
+     * Reference needed to modify the ability to save or not the changes
+     */
     private JButton saveBtn;
+
+    /**
+     * Action triggered to save contacts
+     * Reference needed to retrieve if the user is able to save the changes or not
+     */
     private SaveAction saveAction;
 
-    // Lang
+    /**
+     * ResourceBundle containing messages in loaded locale
+     */
     private ResourceBundle messages;
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         AddressBook ab = new AddressBook();
 
+        ab.translationTable = new HashMap<AbstractButton, String>();
         ab.initLang();
         ab.initFiles();
         ab.initContacts();
@@ -40,16 +85,25 @@ public class AddressBook extends JFrame {
         ab.initWindow();
     }
 
+    /**
+     * Sets default lang & loading default translations
+     */
     private void initLang() {
         Locale currentLocale = new Locale("fr", "FR");
         messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
     }
 
+    /**
+     * Loads config & address book files
+     */
     private void initFiles() {
         initConfigFile();
         initAnnuaireFile();
     }
 
+    /**
+     * Method managing the load of the config file and handling different possible errors
+     */
     private void initConfigFile() {
         File appConfigFile = new File(String.valueOf(appConfigFilePath));
         appConfigFile.getParentFile().mkdirs();
@@ -71,11 +125,18 @@ public class AddressBook extends JFrame {
         }
     }
 
+    /**
+     * Showing an error message & closing the program
+     * @param s
+     */
     private void fatalError(String s) {
         JOptionPane.showMessageDialog(null, s, messages.getString("error_fatal"), JOptionPane.ERROR_MESSAGE);
         System.exit(-1);
     }
 
+    /**
+     * Show the user a dialog to choose the directory where the address book will be saved
+     */
     public void chooseAnnuairePath() {
         JOptionPane.showMessageDialog(null, messages.getString("choose_addressbook_dir"), messages.getString("addressbook_dir"), JOptionPane.QUESTION_MESSAGE);
         JFileChooser browser = new JFileChooser();
@@ -95,6 +156,9 @@ public class AddressBook extends JFrame {
         saveConfig();
     }
 
+    /**
+     * Saves the application config on the disk
+     */
     private void saveConfig() {
         FileOutputStream out;
         try {
@@ -105,6 +169,9 @@ public class AddressBook extends JFrame {
         }
     }
 
+    /**
+     * Loads the address book file & handling errors
+     */
     private void initAnnuaireFile() {
 
         if (appConfig.getProperty("annuairePath") == null) {
@@ -120,6 +187,9 @@ public class AddressBook extends JFrame {
 
     }
 
+    /**
+     * Loads contacts from address book file
+     */
     private void initContacts() {
         this.contacts = new Properties();
 
@@ -130,6 +200,9 @@ public class AddressBook extends JFrame {
         }
     }
 
+    /**
+     * Init the main frame containing the JList / Model & the infos panel
+     */
     private void initFrame() {
         initMenu();
 
@@ -163,18 +236,24 @@ public class AddressBook extends JFrame {
         initToolbar();
     }
 
+    /**
+     * Init the application toolbar
+     */
     private void initToolbar() {
         JToolBar toolbar = new JToolBar();
 
         JButton newContact = new JButton(messages.getString("contact_create"));
+        translationTable.put(newContact, "contact_create");
         newContact.addActionListener(new NewContactAction(this));
         toolbar.add(newContact);
 
         JButton deleteContact = new JButton(messages.getString("contact_delete"));
+        translationTable.put(deleteContact, "contact_delete");
         deleteContact.addActionListener(new DeleteContactAction(this));
         toolbar.add(deleteContact);
 
         saveBtn = new JButton(messages.getString("save"));
+        translationTable.put(saveBtn, "save");
         saveBtn.addActionListener(saveAction);
         toolbar.add(saveBtn);
 
@@ -182,6 +261,9 @@ public class AddressBook extends JFrame {
         setSaveableState(false);
     }
 
+    /**
+     * Init the application window
+     */
     private void initWindow() {
         this.setTitle("AddressBook");
         this.setSize(450, 300);
@@ -190,10 +272,15 @@ public class AddressBook extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Init the application menu and binds it to the app
+     */
     private void initMenu() {
         JMenuBar menu = new JMenuBar();
 
         JMenu file = new JMenu(messages.getString("file"));
+        translationTable.put(file, "file");
+
         JMenuItem saveMenuItem, changeAnnuaireFile, about;
         saveMenuItem = new JMenuItem();
         saveAction = new SaveAction(this);
@@ -206,7 +293,13 @@ public class AddressBook extends JFrame {
         file.add(changeAnnuaireFile);
         file.add(about);
 
+        translationTable.put(saveMenuItem, "save");
+        translationTable.put(changeAnnuaireFile, "choose_addressbook_path");
+        translationTable.put(about, "about");
+
         JMenu contacts = new JMenu(messages.getString("contacts"));
+        translationTable.put(contacts, "contacts");
+
         JMenuItem newContact = new JMenuItem();
         newContact.setAction(new NewContactAction(this));
         JMenuItem deleteContact = new JMenuItem();
@@ -214,8 +307,12 @@ public class AddressBook extends JFrame {
         contacts.add(newContact);
         contacts.add(deleteContact);
 
+        translationTable.put(newContact, "contact_create");
+        translationTable.put(deleteContact, "contact_delete");
+
 
         JMenu lang = new JMenu(messages.getString("lang"));
+        translationTable.put(lang, "lang");
         ButtonGroup langGroup = new ButtonGroup();
 
         JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem("Français");
@@ -236,44 +333,88 @@ public class AddressBook extends JFrame {
         setJMenuBar(menu);
     }
 
+    /**
+     * Sets the contact details to the given contact name
+     * @param selectedValue Contact name
+     * @param text Details
+     */
     private void setContactInfos(String selectedValue, String text) {
         this.contacts.setProperty(selectedValue, text);
         setSaveableState(true);
     }
 
+    /**
+     * Triggered when the selected contact changes ; and call method to display its informations
+     * @param selectedContact Selected contact name
+     * @see AddressBook#setInfosPanelText(String)
+     */
     private void chooseContact(String selectedContact) {
         setInfosPanelText(contacts.getProperty(selectedContact));
     }
 
+    /**
+     * Fills the information panel with the given text
+     * @param s Text to display in the information panel
+     */
     private void setInfosPanelText(String s) {
         this.infosPanel.setText(s);
     }
 
+    /**
+     * Gets address book path.
+     *
+     * @return the annuaire path
+     */
     public Path getAnnuairePath() {
         return Paths.get(appConfig.getProperty("annuairePath"));
     }
 
+    /**
+     * Gets contacts.
+     *
+     * @return the contacts
+     */
     public Properties getContacts() {
         return contacts;
     }
 
+    /**
+     * Add contact.
+     *
+     * @param nom   contact name
+     * @param infos contact details
+     */
     public void addContact(String nom, String infos) {
         setContactInfos(nom, infos);
         contactsNameList.addElement(nom);
     }
 
+    /**
+     * Sorts contacts list
+     */
     public void sort() {
         contactsNameList.sort();
     }
 
+    /**
+     * Returns selected contact when called
+     * @return Selected contact name
+     */
     private String getSelectedContact() {
         return contactsJList.getSelectedValue();
     }
 
+    /**
+     * Remove contacts from address book
+     * @param i Index of the contact to remove
+     */
     private void removeContact(int i) {
         contactsNameList.remove(i);
     }
 
+    /**
+     * Delete selected contact.
+     */
     public void deleteSelectedContact() {
         getContacts().remove(getSelectedContact());
 
@@ -284,44 +425,77 @@ public class AddressBook extends JFrame {
         setSaveableState(true);
     }
 
+    /**
+     * Sets saveable state.
+     *
+     * @param b true to enable the ability to save ; false otherwise
+     */
     public void setSaveableState(boolean b) {
         saveAction.setEnabled(b);
         saveBtn.setEnabled(b);
     }
 
+    /**
+     * Gets saveable state.
+     *
+     * @return the saveable state
+     */
     public boolean getSaveableState() {
         return saveAction.isEnabled();
     }
 
+    /**
+     * Trigger save event.
+     */
     public void triggerSaveEvent() {
         saveAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
     }
 
+    /**
+     * Choose contact given the mouse location
+     *
+     * @param p the p
+     */
     public void chooseContactByLocation(Point p) {
         contactsJList.setSelectedIndex(contactsJList.locationToIndex(p));
     }
 
+    /**
+     * Gets translation messages
+     *
+     * @return the messages
+     */
     public ResourceBundle getMessages() {
         return messages;
     }
 
+    /**
+     * Change locale.
+     *
+     * @param l the l
+     */
     public void changeLocale(Locale l) {
         messages = ResourceBundle.getBundle("MessagesBundle", l);
-        updateSwingComponents(l);
+        updateSwingComponents();
         revalidate();
     }
 
-    private void updateSwingComponents(Locale l) {
+    /**
+     * Sets buttons & menu items translated text
+     */
+    private void updateSwingComponents() {
+        Set componentSet = translationTable.entrySet();
 
+        for (Object o : componentSet) {
+            Map.Entry mentry = (Map.Entry) o;
+            AbstractButton c = (AbstractButton) mentry.getKey();
+            c.setText(messages.getString(mentry.getValue().toString()));
+        }
     }
 
     /*
     TODO :
-        Partie "en plus"
-            - internationalisation
         A penser pour rendu :
-            - javadoc
-            - doc_private & doc_public
             - REAMDE qui décrit les cours utilisés & infos qu'on juge nécessaire
             - sources (rajouter le dossier src dans le jar NICOT_AddressBook.jar)
             - tester le jar puis envoyer [PROJET LP] NICOT - AddressBook à fmichel@lirmm.fr

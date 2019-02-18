@@ -4,7 +4,10 @@
     <option name="ANALYZE_TEST_SOURCES" value="false" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a999637-5510-48a2-b35b-8d27672b1339" name="Default Changelist" comment="" />
+    <list default="true" id="5a999637-5510-48a2-b35b-8d27672b1339" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tp7/src/base/AddressBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tp7/src/base/AddressBook.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,16 +17,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/toto/TotoJPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
+            <state relative-caret-position="2010">
               <caret line="134" selection-start-line="134" selection-end-line="134" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#972#1244#0" expanded="true" />
-                <element signature="e#1243#1244#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/toto/Toto.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -43,6 +53,9 @@
       <find>paintcomponent</find>
     </findStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -61,6 +74,7 @@
     <option name="width" value="1346" />
     <option name="height" value="701" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -71,23 +85,23 @@
         <subPane>
           <expand>
             <path>
-              <item name="dessin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dessin" type="462c0819:PsiDirectoryNode" />
+              <item name="tp4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tp4" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="dessin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dessin" type="462c0819:PsiDirectoryNode" />
+              <item name="tp4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tp4" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="dessin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dessin" type="462c0819:PsiDirectoryNode" />
+              <item name="tp4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tp4" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="dessin" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="dessin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dessin" type="462c0819:PsiDirectoryNode" />
+              <item name="tp4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tp4" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="toto" type="462c0819:PsiDirectoryNode" />
             </path>
@@ -102,7 +116,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544286306763" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Téléchargements/[LP_EB]_SUREAU_BENJAMIN_TP4/TP4" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
@@ -151,11 +165,13 @@
       <updated>1544192788220</updated>
       <workItem from="1544192801592" duration="7863000" />
       <workItem from="1544267716037" duration="13776000" />
+      <workItem from="1550531151179" duration="13000" />
+      <workItem from="1550531422977" duration="23000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21639000" />
+    <option name="totallyTimeSpent" value="21675000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -167,9 +183,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-1" width="1366" height="741" extended-state="6" />
+    <frame x="67" y="27" width="1299" height="741" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20984848" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21777421" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -189,6 +206,7 @@
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.22815534" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5007576" side_tool="true" weight="0.32847896" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32847896" />
+      <window_info anchor="bottom" id="Sequence" order="13" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -243,9 +261,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.attach_pid21248">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/.attach_pid21248" />
     <entry file="file://$PROJECT_DIR$/src/dessin/ObjetGraphique.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-835">
@@ -275,13 +291,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/toto/Toto.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-175">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.project">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -298,13 +307,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/toto/TotoJPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
+        <state relative-caret-position="2010">
           <caret line="134" selection-start-line="134" selection-end-line="134" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#972#1244#0" expanded="true" />
-            <element signature="e#1243#1244#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/toto/Toto.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
