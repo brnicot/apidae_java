@@ -493,11 +493,4 @@ public class AddressBook extends JFrame {
         }
     }
 
-    /*
-    TODO :
-        A penser pour rendu :
-            - REAMDE qui décrit les cours utilisés & infos qu'on juge nécessaire
-            - sources (rajouter le dossier src dans le jar NICOT_AddressBook.jar)
-            - tester le jar puis envoyer [PROJET LP] NICOT - AddressBook à fmichel@lirmm.fr
-     */
 }
