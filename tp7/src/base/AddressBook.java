@@ -154,7 +154,9 @@ public class AddressBook extends JFrame {
         infosPanel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
-                setContactInfos(getSelectedContact(), infosPanel.getText());
+                if(keyEvent.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {
+                    setContactInfos(getSelectedContact(), infosPanel.getText());
+                }
             }
         });
 
@@ -304,9 +306,13 @@ public class AddressBook extends JFrame {
     }
 
     public void changeLocale(Locale l) {
-        setLocale(l);
         messages = ResourceBundle.getBundle("MessagesBundle", l);
-        // putain comment on fait
+        updateSwingComponents(l);
+        revalidate();
+    }
+
+    private void updateSwingComponents(Locale l) {
+
     }
 
     /*
