@@ -212,8 +212,24 @@ public class AddressBook extends JFrame {
         contacts.add(newContact);
         contacts.add(deleteContact);
 
+
+        JMenu lang = new JMenu(messages.getString("lang"));
+        ButtonGroup langGroup = new ButtonGroup();
+
+        JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem("Français");
+        rbMenuItem.setSelected(true);
+        rbMenuItem.addActionListener(new ChangeLangAction(this, new Locale("fr", "FR")));
+        langGroup.add(rbMenuItem);
+        lang.add(rbMenuItem);
+
+        rbMenuItem = new JRadioButtonMenuItem("English");
+        rbMenuItem.addActionListener(new ChangeLangAction(this, new Locale("en", "US")));
+        langGroup.add(rbMenuItem);
+        lang.add(rbMenuItem);
+
         menu.add(file);
         menu.add(contacts);
+        menu.add(lang);
 
         setJMenuBar(menu);
     }
@@ -287,15 +303,21 @@ public class AddressBook extends JFrame {
         return messages;
     }
 
+    public void changeLocale(Locale l) {
+        setLocale(l);
+        messages = ResourceBundle.getBundle("MessagesBundle", l);
+        // putain comment on fait
+    }
+
     /*
     TODO :
         Partie "en plus"
             - internationalisation
         A penser pour rendu :
+            - javadoc
             - doc_private & doc_public
             - REAMDE qui décrit les cours utilisés & infos qu'on juge nécessaire
             - sources (rajouter le dossier src dans le jar NICOT_AddressBook.jar)
-            - code propre (surtout gestion des events & exceptions !)
             - tester le jar puis envoyer [PROJET LP] NICOT - AddressBook à fmichel@lirmm.fr
      */
 }
